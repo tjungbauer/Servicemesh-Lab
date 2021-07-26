@@ -11,4 +11,4 @@ spec:
   source:
     path: deploy_service_mesh_operators/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main

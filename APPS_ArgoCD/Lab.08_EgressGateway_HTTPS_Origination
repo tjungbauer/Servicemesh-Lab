@@ -11,4 +11,4 @@ spec:
   source:
     path: Lab.08-EgressGateway-HTTPS-Origination/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main

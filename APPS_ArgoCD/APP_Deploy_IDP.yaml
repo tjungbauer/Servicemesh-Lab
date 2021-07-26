@@ -11,4 +11,4 @@ spec:
   source:
     path: install_idp/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main

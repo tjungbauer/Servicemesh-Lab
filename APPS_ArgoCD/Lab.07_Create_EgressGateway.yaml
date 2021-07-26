@@ -11,4 +11,4 @@ spec:
   source:
     path: Lab.07-Create-EgressGateway/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main

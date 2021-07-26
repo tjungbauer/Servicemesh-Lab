@@ -11,4 +11,4 @@ spec:
   source:
     path: Lab.09-C1-Fault-Injection/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main

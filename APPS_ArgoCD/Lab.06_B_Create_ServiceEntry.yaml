@@ -11,4 +11,4 @@ spec:
   source:
     path: Lab.06-B-Create-ServiceEntry/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main

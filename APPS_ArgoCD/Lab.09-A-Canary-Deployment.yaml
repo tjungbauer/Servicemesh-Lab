@@ -11,4 +11,4 @@ spec:
   source:
     path: Lab.09-A-Canary-Deployment/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main

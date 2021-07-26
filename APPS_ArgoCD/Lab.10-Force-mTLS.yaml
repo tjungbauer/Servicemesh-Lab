@@ -11,4 +11,4 @@ spec:
   source:
     path: Lab.10-Force-mTLS/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main

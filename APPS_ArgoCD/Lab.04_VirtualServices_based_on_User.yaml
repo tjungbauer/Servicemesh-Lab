@@ -11,4 +11,4 @@ spec:
   source:
     path: Lab.04-VirtualServices-based-on-User/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main

@@ -11,4 +11,4 @@ spec:
   source:
     path: enable_etcd_encryption/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main

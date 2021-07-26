@@ -11,4 +11,4 @@ spec:
   source:
     path: Lab.02-Create-Service-Mesh/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main

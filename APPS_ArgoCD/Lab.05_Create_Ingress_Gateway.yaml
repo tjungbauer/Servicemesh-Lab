@@ -11,4 +11,4 @@ spec:
   source:
     path: Lab.05-Create-Ingress-Gateway/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main

@@ -11,4 +11,4 @@ spec:
   source:
     path: create_ErDemo_Instance/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main

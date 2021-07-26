@@ -11,4 +11,4 @@ spec:
   source:
     path: Lab.01_Deploy_Plain_Bookinfo_App/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
-    targetRevision: master
+    targetRevision: main
