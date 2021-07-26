@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: lab.04-virtual-services-based-on-user
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: openshift/AWS-ServiceMesh-Lab/Lab.04-VirtualServices-based-on-User/
+    repoURL: https://github.com/tjungbauer/OCP-Lab-Setup
+    targetRevision: master

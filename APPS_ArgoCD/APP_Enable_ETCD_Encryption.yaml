@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: enable-etcd-encryption
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: openshift/AWS-ServiceMesh-Lab/enable_etcd_encryption/
+    repoURL: https://github.com/tjungbauer/OCP-Lab-Setup
+    targetRevision: master

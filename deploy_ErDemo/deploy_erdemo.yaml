@@ -1,0 +1,41 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: erdemo-operators
+  namespace: openshift-marketplace
+spec:
+  sourceType: grpc
+  image: quay.io/emergencyresponsedemo/erdemo-operator-catalog:2.12.0
+  displayName: Emergency Response Demo Operator
+  publisher: RedHatGov
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: erdemo-operator-system
+  annotations:
+    openshift.io/node-selector: ""
+  labels:
+    openshift.io/cluster-monitoring: "true"
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: erdemo-operator-system-m2tdh
+  namespace: erdemo-operator-system
+spec:
+  targetNamespaces:
+    - erdemo-operator-system
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: erdemo-operator
+  namespace: erdemo-operator-system
+spec:
+  channel: alpha
+  installPlanApproval: Automatic
+  name: erdemo-operator
+  source: erdemo-operators
+  sourceNamespace: openshift-marketplace
+  startingCSV: erdemo-operator.v2.12.0

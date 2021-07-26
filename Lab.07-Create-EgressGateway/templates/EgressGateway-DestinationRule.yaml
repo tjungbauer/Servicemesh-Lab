@@ -1,0 +1,9 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: worldclock-egress
+  namespace: {{ .Values.namespace }}
+spec:
+  host: istio-egressgateway.bookinfo-istio-control.svc.cluster.local
+  subsets:
+  - name: worldclock-destination

@@ -1,0 +1,12 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: servicemeshoperator
+  namespace: {{ .Values.mesh.namespace }}
+spec:
+  channel: stable
+  installPlanApproval: {{ .Values.mesh.upgradeplan }}
+  name: servicemeshoperator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+  startingCSV: {{ .Values.mesh.starting_csv }}

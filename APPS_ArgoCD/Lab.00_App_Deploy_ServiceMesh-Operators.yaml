@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: lab.00-deploy-servicemesh-operators
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: openshift/AWS-ServiceMesh-Lab/deploy_service_mesh_operators/
+    repoURL: https://github.com/tjungbauer/Servicemesh-Lab
+    targetRevision: master

@@ -1,0 +1,36 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: worldclock-egress
+  namespace: {{ .Values.namespace }}
+spec:
+  hosts:
+  - worldclockapi.com
+  gateways:
+  - mesh
+  - worldclock
+  tls:
+  - match:
+    - gateways:
+      - mesh
+      port: 443
+      sniHosts:
+      - worldclockapi.com
+    route:
+    - destination:
+        host: istio-egressgateway.bookinfo-istio-control.svc.cluster.local
+        subset: worldclock-destination
+        port:
+          number: 443
+  - match:
+    - gateways:
+      - worldclock
+      port: 443
+      sniHosts:
+      - worldclockapi.com
+    route:
+    - destination:
+        host: worldclockapi.com
+        port:
+          number: 443
+      weight: 100

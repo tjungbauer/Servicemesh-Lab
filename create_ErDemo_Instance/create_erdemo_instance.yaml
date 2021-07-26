@@ -1,0 +1,8 @@
+apiVersion: apps.erdemo.io/v1alpha1
+kind: ErDemo
+metadata:
+  name: erdemo
+  namespace: erdemo-operator-system
+spec:
+  mapToken: >-
+    pk.eyJ1IjoidGp1bmdiYXVlciIsImEiOiJja25oa2F3cHcwMHF4MnFwOHBqeHBwemlwIn0.gFm3tFkHsR5tbYL-Lk7IFA
