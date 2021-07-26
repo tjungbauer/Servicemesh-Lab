@@ -9,6 +9,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: openshift/AWS-ServiceMesh-Lab/Lab.04-VirtualServices-based-on-User/
-    repoURL: https://github.com/tjungbauer/OCP-Lab-Setup
+    path: Lab.04-VirtualServices-based-on-User/
+    repoURL: https://github.com/tjungbauer/Servicemesh-Lab
     targetRevision: master

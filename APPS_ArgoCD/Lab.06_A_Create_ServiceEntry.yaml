@@ -9,6 +9,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: openshift/AWS-ServiceMesh-Lab/Lab.06-A-Create-ServiceEntry/
-    repoURL: https://github.com/tjungbauer/OCP-Lab-Setup
+    path: Lab.06-A-Create-ServiceEntry/
+    repoURL: https://github.com/tjungbauer/Servicemesh-Lab
     targetRevision: master

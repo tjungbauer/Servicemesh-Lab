@@ -9,6 +9,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: openshift/AWS-ServiceMesh-Lab/deploy_ErDemo/
-    repoURL: https://github.com/tjungbauer/OCP-Lab-Setup
+    path: deploy_ErDemo/
+    repoURL: https://github.com/tjungbauer/Servicemesh-Lab
     targetRevision: master

@@ -9,6 +9,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: openshift/AWS-ServiceMesh-Lab/enable_etcd_encryption/
-    repoURL: https://github.com/tjungbauer/OCP-Lab-Setup
+    path: enable_etcd_encryption/
+    repoURL: https://github.com/tjungbauer/Servicemesh-Lab
     targetRevision: master

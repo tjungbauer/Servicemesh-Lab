@@ -9,6 +9,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: openshift/AWS-ServiceMesh-Lab/deploy_service_mesh_operators/
+    path: deploy_service_mesh_operators/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
     targetRevision: master
