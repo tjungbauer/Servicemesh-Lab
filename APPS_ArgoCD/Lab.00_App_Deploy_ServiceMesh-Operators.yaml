@@ -9,6 +9,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: deploy_service_mesh_operators/
+    path: Lab.00_Deploy_Service_Mesh_Operators/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
     targetRevision: main
