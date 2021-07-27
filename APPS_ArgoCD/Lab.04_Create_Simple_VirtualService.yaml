@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: lab.03-create-simple-virtualservice
+  name: lab.04-create-simple-virtualservice
   namespace: openshift-gitops
 spec:
   destination:
@@ -9,6 +9,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: Lab.03-Create-Simple-VirtualServices/
+    path: Lab.04-Create-Simple-VirtualServices/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
     targetRevision: main
