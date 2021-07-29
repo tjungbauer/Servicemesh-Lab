@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/instance: lab.01-deploy-bookinfo
     service: productpage
 spec:
-  host: productpage-bookinfo.apps.ocp.ispworld.at
+  host: productpage-bookinfo.{{ required "A valid .Values.routedeomain entry required!" .Values.routedeomain | lower | quote }}
   to:
     kind: Service
     name: productpage

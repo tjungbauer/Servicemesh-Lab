@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: deploy-er-demo
+  name: lab.98-deploy-erdemo
   namespace: openshift-gitops
 spec:
   destination:
@@ -9,6 +9,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: deploy_ErDemo/
+    path: Lab.98-Deploy_ERDemo/
     repoURL: https://github.com/tjungbauer/Servicemesh-Lab
     targetRevision: main
