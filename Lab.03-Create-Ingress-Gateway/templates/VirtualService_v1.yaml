@@ -69,7 +69,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   hosts:
-  - - bookinfo.{{ required "A valid .Values.routedomain entry required!" .Values.routedomain | lower | quote }}
+  - bookinfo.{{ required "A valid .Values.routedomain entry required!" .Values.routedomain | lower }}
   gateways:
   - bookinfo-gateway
   http:
