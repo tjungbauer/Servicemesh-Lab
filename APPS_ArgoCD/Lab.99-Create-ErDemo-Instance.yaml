@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: lab.99-create_erdemo_instance
+  name: lab.99-create-erdemo-instance
   namespace: openshift-gitops
 spec:
   destination:
