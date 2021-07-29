@@ -4,7 +4,7 @@ metadata:
   name: default
   namespace: {{ .Values.namespace }}
 spec:
-  members: |-
-    {{- range .Values.cpMembers }}
+  members:
+    {{- range tuple "small" "medium" "large" }}
     - {{ . }}
-    {{- end }}
+    {{- end }}
