@@ -3,6 +3,7 @@ apiVersion: route.openshift.io/v1
 metadata:
   name: productpage
   namespace: {{ .Values.namespace }}
+  annotation:
     app: productpage
     app.kubernetes.io/instance: lab.01-deploy-bookinfo
     service: productpage
