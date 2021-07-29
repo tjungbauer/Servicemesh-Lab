@@ -1,8 +1,0 @@
-apiVersion: v1
-entries:
-  labconfig:
-  - apiVersion: v2
-    name: labconfig
-    urls:
-    - https//github.com/tjungbauer/Servicemesh-Lab/ServiceMesh-Lab-Config
-    version: 1.0.0
