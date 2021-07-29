@@ -1,5 +1,5 @@
 apiVersion: v2
-name: lab-config
+name: labconfig
 type: application
 version: 1.0.0
 appVersion: "1.0.0"
