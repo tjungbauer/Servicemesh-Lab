@@ -4,3 +4,5 @@
 
 namespace: bookinfo
 cpnamespace: bookinfo-istio-control
+
+routedomain: ""
