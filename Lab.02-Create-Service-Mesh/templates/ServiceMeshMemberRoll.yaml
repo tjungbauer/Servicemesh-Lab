@@ -5,6 +5,6 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   members:
-    {{- range tuple "small" "medium" "large" }}
+    {{- range .Values.cpMembers }}
     - {{ . }}
     {{- end }}
