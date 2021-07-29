@@ -9,7 +9,7 @@ spec:
       file:
         encoding: TEXT
         name: '/dev/stdout'
-  version: v2.0
+  version: {{ .Values.cp_version }}
   tracing:
     type: Jaeger
     sampling: 10000
@@ -18,9 +18,9 @@ spec:
       name: jaeger
       install:
         storage:
-          type: Memory
+          type: {{ .Values.cp_jaeger_storagetype }}
     kiali:
-      enabled: true
+      enabled: {{ .Values.cp_kiali }}
       name: kiali
     grafana:
-      enabled: true
+      enabled: {{ .Values.cp_grafana }}

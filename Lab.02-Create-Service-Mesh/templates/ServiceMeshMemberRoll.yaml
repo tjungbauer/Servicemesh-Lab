@@ -5,4 +5,5 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   members:
-    - bookinfo
+    {{- range .Vaues.cp_members }}
+    {{- end }}
