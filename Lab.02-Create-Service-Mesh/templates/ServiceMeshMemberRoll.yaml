@@ -6,4 +6,5 @@ metadata:
 spec:
   members:
     {{- range .Vaues.cp_members }}
+    - {{ . }}
     {{- end }}
