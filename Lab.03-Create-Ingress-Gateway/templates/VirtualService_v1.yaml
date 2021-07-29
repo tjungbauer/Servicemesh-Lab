@@ -69,7 +69,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   hosts:
-  - "bookinfo.apps.ocp.ispworld.at"
+  - - bookinfo.{{ required "A valid .Values.routedomain entry required!" .Values.routedomain | lower | quote }}
   gateways:
   - bookinfo-gateway
   http:
