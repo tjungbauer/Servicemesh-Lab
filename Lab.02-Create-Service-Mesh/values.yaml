@@ -7,5 +7,5 @@ cp_version: v2.0
 cp_kiali: true
 cp_grafana: true
 cp_jaeger_storagetype: Memory
-cp_members: 
+cpMembers: 
   - bookinfo
