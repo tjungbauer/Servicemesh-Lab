@@ -1,0 +1,327 @@
+= {subject}: {description}
+Thomas Jungbauer <tjungbau@redhat.com>
+:subject: OpenShift 4.x Day 2 Operations
+:description: Preparation Document
+:projectname:
+:customerlong: None
+:customer: None
+:consultantname: Thomas Jungbauer
+:consultantmail: tjungbau@redhat.com
+// asciidoctor knows also {firstname} {middlename} {lastname} {authorinitials}
+:doctype: book
+:confidentiality: Confidential; Restricted Distribution
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:numbered:
+:chapter-label:
+:encoding: UTF-8
+:lang: en
+:source-autofit:
+//:pdf-fontsdir: /usr/share/fonts/liberation-sans;/usr/share/fonts/redhat;GEM_FONTS_DIR
+:pdf-fontsdir: fonts/
+:pdf-page-size: A4
+:pdf-style: redhat
+:pdf-stylesdir: pdf-styles/
+:imagesdir: images/
+ifdef::backend-pdf[]
+:source-highlighter: rouge
+:rouge-style: github
+:icons: font
+endif::[]
+// only usable if you call `asciidoctor-pdf` with
+//   --attribute gitdate=$(git log -1 --date=short --pretty=format:%cd)
+// :revnumber: {gitdate}
+:revnumber: 1.0.0
+//A simple http://asciidoc.org[AsciiDoc] document.
+
+## Disable Self Provisioner
+[small]#Reference: https://docs.openshift.com/container-platform/4.7/applications/projects/configuring-project-creation.html#disabling-project-self-provisioning_configuring-project-creation[Disable Self-Provisioner]#
+
+By default the self-provisioner role is bound to any authenticated user. This means that any user who can log in can create their own project and resources within that project.
+
+The self-provisioner role should be disabled in a highly secure environment. Project creation should be delegated to either OpenShift administrators, or automation/CICD tools such as Jenkins.
+
+To disable the self-provisioner role
+
+[source,bash]
+----
+# Remove any rolebindings attached to self-provisioner
+oc patch clusterrolebinding.rbac self-provisioners -p '{"subjects": null}'
+
+# Remove self-provisioner role from authenticated users
+oc adm policy remove-cluster-role-from-group self-provisioner system:authenticated:oauth
+
+# Disable autoupdate to make sure it doesn't revert
+oc patch clusterrolebinding.rbac self-provisioners -p '{ "metadata": { "annotations": { "rbac.authorization.kubernetes.io/autoupdate": "false" } } }'
+----
+
+## Identity Provides
+
+### LDAP Authentication
+
+Create OCP secret to store the LDAP bind user password
+
+[source,bash]
+----
+oc create secret generic ldap-secret --from-literal=bindPassword=<ldap_bind_password> -n openshift-config
+----
+
+Create ConfigMap to store the CA certificate (optional)
+
+[source,bash]
+----
+oc create configmap ca-config-map --from-file=ca.crt=/path/to/ca -n openshift-config
+----
+
+Activate LDAP Identity Provider
+
+CAUTION: OAuth definition is a list, if you add additional Identity Provides, they must be added to the list.
+
+TIP: You can also configure the identity Providers in the WebUI (Administration > Cluster Settings Global Configuration > OAuth)
+
+[source,yaml]
+----
+cat <<'EOF' > oauth-ldap.yaml
+
+apiVersion: config.openshift.io/v1
+kind: OAuth
+metadata:
+  name: cluster
+spec:
+  identityProviders:
+  - name: ldap <1>
+    mappingMethod: claim
+    type: LDAP
+    ldap:
+      attributes:
+        id:
+        - dn
+        email:
+        - mail
+        name:
+        - cn
+        preferredUsername:
+        - sAMAccountName
+      bindDN: "CN=svc-ocp-ldap,OU=service accounts,DC=example,DC=com"
+      bindPassword:
+        name: ldap-secret
+      ca:
+        name: ca-config-map
+      insecure: false <2>
+      url: "ldap://myldap.example.com/dc=example,dc=com?sAMAccountName?sub?(memberOf=CN=openshift-users,OU=groups,DC=example,DC=com)" <3>
+EOF
+----
+<1> Name as shown on the Login Screen
+<2> Insecure yes or no
+<3> Server Name with filter. Any user under the “CN=openshift-users,OU=groups,DC=example,DC=com” group will be able to login in the cluster.
+
+The default role is the basic user role. Appropriate Role Settings must be defined.
+
+#### LDAP Group Sync
+
+Create the bind password secret. (Or reuse _ldap-secret_ as it was defined above)
+
+[source,bash]
+----
+oc create secret generic v4-0-config-user-idp-0-bind-password --from-literal=bindPassword=<replace-password> -n openshift-authentication
+----
+
+Create secret with LDAP ca certificate. Or reuse _ca-config-map_ as it was defined above)
+
+[source,bash]
+----
+oc create configmap v4-0-config-user-idp-0-ca --from-file=ca.crt=<replace-path-to-ca> -n openshift-authentication
+----
+
+Create cronjob and required resources in namespace _openshift-authentication_. Replace values accordingly.
+
+[source,yaml]
+----
+cat <<'EOF' > ldap-group-sync.yaml
+
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: ldap-group-syncer
+  namespace: openshift-authentication
+  labels:
+    app: cronjob-ldap-group-sync
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ldap-group-syncer
+  labels:
+    app: cronjob-ldap-group-sync
+rules:
+  - apiGroups:
+      - ''
+      - user.openshift.io
+    resources:
+      - groups
+    verbs:
+      - get
+      - list
+      - create
+      - update
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ldap-group-syncer
+  labels:
+    app: cronjob-ldap-group-sync
+subjects:
+  - kind: ServiceAccount
+    name: ldap-group-syncer
+    namespace: openshift-authentication
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ldap-group-syncer
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ldap-group-syncer
+  namespace: openshift-authentication
+  labels:
+    app: cronjob-ldap-group-sync
+data:
+  ldap-group-sync.yaml: |
+    kind: LDAPSyncConfig
+    apiVersion: v1
+    url: ldaps://<YOUR_LDAP_SERVER>/ <1>
+    insecure: false <2>
+    bindDN: cn=<EDIT_THIS_DN>,dc=example,dc=com <3>
+    bindPassword:
+      file: "/etc/secrets/bindPassword"
+    ca: /etc/ldap-ca/ca.crt
+    rfc2307:
+        groupsQuery:
+            baseDN: "ou=<EDIT_THIS_DN>,dc=example,dc=com" <4>
+            scope: sub
+            filter: "(objectClass=groupOfMembers)" <5>
+            derefAliases: never
+            pageSize: 0
+        groupUIDAttribute: dn
+        groupNameAttributes: [ cn ]
+        groupMembershipAttributes: [ member ]
+        usersQuery:
+            baseDN: "ou=<EDIT_THIS_DN>,dc=example,dc=com" <6>
+            scope: sub
+            derefAliases: never
+            pageSize: 0
+        userUIDAttribute: dn
+        userNameAttributes: [ uid ]
+        tolerateMemberNotFoundErrors: false
+        tolerateMemberOutOfScopeErrors: false
+---
+kind: CronJob
+apiVersion: batch/v1beta1
+metadata:
+  name: ldap-group-syncer
+  namespace: openshift-authentication
+  labels:
+    app: cronjob-ldap-group-sync
+spec:
+  schedule: "*/10 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    metadata:
+      labels:
+        app: cronjob-ldap-group-sync
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app: cronjob-ldap-group-sync
+        spec:
+          containers:
+            - name: ldap-group-sync
+              image: "openshift/origin-cli:latest"
+              command:
+                - "/bin/bash"
+                - "-c"
+                - oc adm groups sync --sync-config=/etc/config/ldap-group-sync.yaml --confirm
+              volumeMounts:
+                - mountPath: "/etc/config"
+                  name: "ldap-sync-volume"
+                - mountPath: "/etc/secrets"
+                  name: "ldap-bind-password"
+                - mountPath: "/etc/ldap-ca"
+                  name: "ldap-ca"
+          volumes:
+            - name: "ldap-sync-volume"
+              configMap:
+                name: "ldap-group-syncer"
+            - name: "ldap-bind-password"
+              secret:
+                secretName: "v4-0-config-user-idp-0-bind-password" <7>
+            - name: "ldap-ca"
+              configMap:
+                name: "v4-0-config-user-idp-0-ca" <8>
+          restartPolicy: "Never"
+          terminationGracePeriodSeconds: 30
+          activeDeadlineSeconds: 500
+          dnsPolicy: "ClusterFirst"
+          serviceAccountName: "ldap-group-syncer"
+          serviceAccount: "ldap-group-syncer"
+EOF
+----
+<1> LDAP Server
+<2> Insecure true/false
+<3> bindDN
+<4> baseDN
+<5> appropriate Filter
+<6> baseDN
+<7> Name of bind secret
+<8> Name of CA configMap
+
+### htPasswd Authentication
+
+Create htpasswd credentials
+
+For the user using the htpasswd identity, a password must be encrypted using the htpasswd command. This command should be executed in the bastion node and will create the file users.htpasswd. Out of this file an OpenShift secret is created
+
+[source,bash]
+----
+htpasswd -c -B -b users.htpasswd user1 MyPassword!
+
+oc create secret generic htpass-secret --from-file=htpasswd=users.htpasswd -n openshift-config
+----
+
+CAUTION: OAuth definition is a list, if you add additional Identity Provides, they must be added to the list.
+
+TIP: You can also configure the identity Providers in the WebUI (Administration > Cluster Settings Global Configuration > OAuth)
+
+Create the Identity Provider configuration
+
+[source,yaml]
+----
+cat <<'EOF' > idp.yaml
+cat <<'EOF' > idp.yaml
+ apiVersion: config.openshift.io/v1
+ kind: OAuth
+ metadata:
+   name: cluster
+ spec:
+   identityProviders: <1>
+  - name: Lokal <2>
+    mappingMethod: claim
+    type: HTPasswd <3>
+    htpasswd:
+      fileData:
+        name: htpass-secret <4>
+
+EOF
+----
+<1> List of identity providers
+<2> Name for identity provider. Shown on Login page for end-users.
+<3> Provider: htpasswd
+<4> name of secret for htpasswd
+
