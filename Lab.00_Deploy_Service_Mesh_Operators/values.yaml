@@ -11,7 +11,7 @@ es:
 jaeger:
   namespace: openshift-operators
   upgradeplan: Automatic
-  starting_csv: jaeger-operator.v1.24.1
+  starting_csv: jaeger-operator.v1.30.0
 
 kiali:
   namespace: openshift-operators
