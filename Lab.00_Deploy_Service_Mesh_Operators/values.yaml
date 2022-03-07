@@ -5,20 +5,20 @@
 es:
   namespace: openshift-operators-redhat
   upgradeplan: Automatic
-  starting_csv: elasticsearch-operator.4.6.0-202107082022
-  channel: '4.6'
+  starting_csv: elasticsearch-operator.5.3.5-20
+  channel: 'stable'
 
 jaeger:
   namespace: openshift-operators
   upgradeplan: Automatic
-  starting_csv: jaeger-operator.v1.20.4
+  starting_csv: jaeger-operator.v1.24.1
 
 kiali:
   namespace: openshift-operators
   upgradeplan: Automatic
-  starting_csv: kiali-operator.v1.24.8
+  starting_csv: kiali-operator.v1.36.7
 
 mesh:
   namespace: openshift-operators
   upgradeplan: Automatic
-  starting_csv: servicemeshoperator.v2.0.6.2
+  starting_csv: servicemeshoperator.v2.1.1
