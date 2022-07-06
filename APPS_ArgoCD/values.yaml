@@ -169,7 +169,7 @@ applications:
 
   lab.98-deploy-erdemo:
     enabled: true
-    description: Deploy mTLS
+    description: Deploy ER Demo
     server: *mgmtcluster
     project: *argocdproject
     source:
@@ -179,7 +179,7 @@ applications:
 
   lab.99-create-erdemo-instance:
     enabled: true
-    description: Deploy mTLS
+    description: Deploy ER Demo instance
     server: *mgmtcluster
     project: *argocdproject
     source:
