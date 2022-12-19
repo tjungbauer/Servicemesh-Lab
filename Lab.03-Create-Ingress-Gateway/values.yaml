@@ -5,4 +5,4 @@
 namespace: bookinfo
 cpnamespace: bookinfo-istio-control
 
-routedomain: ""
+routedomain: "apps.dev-ocp-gen.bs.cial.ch"
